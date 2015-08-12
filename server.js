@@ -100,9 +100,12 @@ var SampleApp = function() {
      */
     self.initializeServer = function() {
         self.app = express();
+        self.app.disable('x-powered-by');
 
         self.app.use(function(req, res, next) {
-            res.charset = "windows-1251";
+            if (/^(.*\.html?|\/)$/.test(req.path)) {
+                res.setHeader('Content-Type', 'text/html; charset=windows-1251');
+            }
             next();
         });
         self.app.use(express.static("site", {index: 'index.htm'}));
